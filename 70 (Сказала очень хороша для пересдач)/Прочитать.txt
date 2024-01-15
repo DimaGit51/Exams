@@ -1,0 +1,58 @@
+В выходной поток писать через DataOutputStream() - Типо если бы надо было через ObjectOutputStream() то 
+она бы написала, что надо сериализовать.
+
+Можно ориентироваться на это решение - надо дописать if  с умножением
+
+public class Task1 {
+public static void main(String[] args) {
+FileInputStream fis=null;
+FileOutputStream fos=null;
+ObjectInputStream ois=null;
+DataOutputStream dos=null;
+Detail[] array;
+try {
+fis=new FileInputStream(args[0]);
+ois = new ObjectInputStream(fis);
+array=(Detail[])ois.readObject();
+double min=array[0].getWeight();
+double max=array[0].getWeight();
+for (Detail element:array){
+if (element.getWeight()<min){
+min=element.getWeight();
+}
+if (element.getWeight()>max){
+max=element.getWeight();
+}
+}
+fos=new FileOutputStream(args[1]);
+dos=new DataOutputStream(fos);
+dos.writeDouble(min);
+dos.writeDouble(max);
+} catch (FileNotFoundException ex) {
+System.out.println("File not found!");
+} catch (IOException ex) {
+System.out.println("Input/Output Error!");
+} catch (ClassNotFoundException ex) {
+System.out.println("Class not found!");
+}
+finally {
+try {
+if (ois!=null){
+ois.close();
+}
+if (dos!=null){
+dos.close();
+}
+if (fis!=null){
+fis.close();
+}
+if (fos!=null){
+fos.close();
+}
+}
+catch(IOException ex){
+System.out.println("Input/Output Error!");
+}
+}
+}
+}
